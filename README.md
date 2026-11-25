@@ -18,3 +18,9 @@ A one-page site: index.html, the portrait in photos/, and CNAME (tells GitHub Pa
 ## Changing it later
 
 Edit `index.html` (the paragraph and the links are near the bottom of the file) and upload it again. Adding pages later means adding files next to `index.html` and linking to them.
+
+## The Expeditions page
+
+`expeditions.html` draws everything from four files: `trips.js` (the trips, their text, photos and videos — the one to edit), `routes.js` (the road shapes for the route maps), `geo.js` (coastlines, rivers and borders) and `maps.js` (draws the maps). Its look is in `style.css`.
+
+To add a trip, copy a block in `trips.js`, put its photos in `photos/<trip-id>/`, and set `cover` (which photo shows in the list, counting from 0) and `summary` (one line for the list). To make a phrase in a trip's story open a photo, wrap it as `<a data-p="2">phrase</a>`, where 2 is the photo's number counting from 0. A road leg with no shape in `routes.js` is drawn as a straight line.

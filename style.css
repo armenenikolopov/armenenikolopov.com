@@ -1,0 +1,115 @@
+/* Design A: every page opens with a paragraph whose links are its contents, and one picture or map on the right.
+   Colours, type and spacing follow the FieldAssistant design system: white ground, system sans, one blue, hairline rows. */
+:root{
+  color-scheme:light;
+  --bg:#ffffff;--soft:#f1f3f5;--hairline:#eef1f3;--border:#d5dbe0;
+  --text:#15202b;--ink-2:#3f4a54;--muted:#5f6b76;
+  --primary:#165f99;--primary-strong:#0f4774;--primary-tint:#e8f0fb;
+  --sea:#eef2f5;--land:#ffffff;--coast:#aab5bf;--river:#9bbbd6;--state:#e3e8ec;--map-border:#8a949d;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --gl:max(clamp(16px,5vw,72px),env(safe-area-inset-left,0px));
+  --gr:max(clamp(16px,5vw,72px),env(safe-area-inset-right,0px));
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:17px;line-height:26px}
+img{max-width:100%}
+a{color:var(--primary);text-decoration-thickness:1px;text-underline-offset:.16em}
+a:hover{color:var(--primary-strong);text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+
+/* Header */
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 24px;padding:32px var(--gr) 0 var(--gl)}
+.name{font-size:17px;line-height:24px;font-weight:650;color:var(--text);text-decoration:none}
+.name:hover{color:var(--text)}
+.mail{font-size:13.5px;line-height:18px;font-weight:500}
+
+/* Opening: text left, picture or map right */
+.split{display:flex;flex-wrap:wrap;align-items:flex-start}
+.split-rev{flex-wrap:wrap-reverse;align-items:stretch}
+.split-text{flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:40px;padding:0 var(--gr) 0 var(--gl)}
+.opening{max-width:44rem;display:flex;flex-direction:column;gap:16px;padding-top:72px}
+.trip-view .opening{max-width:46rem;padding-top:56px;padding-bottom:48px}
+h1{margin:0;font-size:26px;line-height:32px;font-weight:700;text-wrap:balance}
+.menu{margin:0;font-size:clamp(20px,2vw,28px);line-height:1.45;text-wrap:pretty}
+.story{margin:0;font-size:clamp(18px,1.55vw,22px);line-height:1.55;text-wrap:pretty}
+.crumb{margin:0;font-size:13.5px;line-height:18px;font-weight:500;color:var(--muted)}
+.cap{margin:0;padding:10px 16px 0;font-size:12px;line-height:16px;font-weight:500;color:var(--muted)}
+
+/* Trip list */
+.trips{list-style:none;margin:0;padding:0;border-top:1px solid var(--border);max-width:52rem}
+.trips a{display:flex;gap:20px;align-items:flex-start;padding:16px 8px;border-bottom:1px solid var(--hairline);color:var(--text);text-decoration:none}
+.trips li.on a,.trips a:hover{background:var(--primary-tint)}
+.trips img{flex:0 0 128px;width:128px;height:96px;object-fit:cover;border-radius:10px;background:var(--soft)}
+.trips .tx{display:flex;flex-direction:column;gap:2px;min-width:0}
+.trips .when{font-size:12px;line-height:16px;font-weight:500;color:var(--muted)}
+.trips .ttl{font-size:17px;line-height:24px;font-weight:650;color:var(--primary)}
+.trips .sum{font-size:15px;line-height:22px;color:var(--ink-2)}
+@media (max-width:520px){.trips img{flex-basis:88px;width:88px;height:72px}.trips a{gap:14px;padding:14px 0}}
+
+/* Maps */
+.side-map{margin:0;flex:1 1 560px;max-width:680px;min-width:0;position:sticky;top:0;align-self:flex-start;padding-top:24px}
+@media (max-width:1000px){.side-map{position:static;max-width:none;padding:40px 0 0}}
+.atlas-map svg{display:block;width:100%;height:auto}
+.atlas-map .world{margin-bottom:6px}
+.side-route{margin:0;flex:1 1 420px;max-width:600px;min-width:0;padding-top:40px}
+.route svg{display:block;width:100%;height:auto;border:1px solid var(--hairline)}
+.m-sea{fill:var(--sea)}
+.m-land{fill:var(--land);stroke:var(--coast);stroke-width:.8;vector-effect:non-scaling-stroke;fill-rule:evenodd}
+.m-lake{fill:var(--sea);stroke:var(--coast);stroke-width:.6;vector-effect:non-scaling-stroke;fill-rule:evenodd}
+.m-frame{fill:none;stroke:var(--text);stroke-width:1;stroke-dasharray:2 2;vector-effect:non-scaling-stroke}
+.m-ref{fill:var(--muted)}
+.m-label.m-ref-label{fill:var(--muted)}
+.m-state{fill:none;stroke:var(--state);stroke-width:.7;vector-effect:non-scaling-stroke}
+.m-border{fill:none;stroke:var(--map-border);stroke-width:.9;stroke-dasharray:3 2;vector-effect:non-scaling-stroke}
+.m-river{fill:none;stroke:var(--river);stroke-width:.9;vector-effect:non-scaling-stroke}
+.m-route{fill:none;stroke:var(--primary);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.m-air{stroke-dasharray:2 4}
+.rt .m-route{stroke-width:1.2;opacity:.55}
+.m-boat{stroke-dasharray:.5 4;stroke-width:2.2}
+.m-plane{fill:var(--primary);stroke:var(--land);stroke-width:1;paint-order:stroke;vector-effect:non-scaling-stroke}
+.rt .m-plane{opacity:.75}
+.m-stop{fill:var(--primary);stroke:var(--land);stroke-width:1.5;vector-effect:non-scaling-stroke}
+.m-site{fill:var(--land);stroke:var(--primary);stroke-width:1.6;vector-effect:non-scaling-stroke}
+.m-star{fill:var(--primary);stroke:var(--land);stroke-width:1.2;vector-effect:non-scaling-stroke;transform-box:fill-box;transform-origin:center;transition:transform .15s}
+.pin{cursor:pointer}
+.pin:hover .m-star,.pin.on .m-star{transform:scale(1.7);fill:var(--primary-strong)}
+@media (prefers-reduced-motion:reduce){.m-star{transition:none}}
+.m-label{font-family:var(--sans);font-weight:500;fill:var(--text);paint-order:stroke;stroke:var(--land);stroke-linejoin:round}
+.m-label.it{font-style:italic}
+.m-country{font-family:var(--sans);font-weight:500;fill:var(--muted);letter-spacing:.12em}
+.m-sea-label{font-family:var(--sans);font-style:italic;fill:var(--muted)}
+.m-scale{stroke:var(--text);stroke-width:1.2;vector-effect:non-scaling-stroke;fill:none}
+.m-scale-t{font-family:var(--sans);fill:var(--muted)}
+
+/* Photos */
+.photos{padding:0 var(--gr) 0 var(--gl)}
+.photos h2{margin:40px 0 20px;padding-top:28px;border-top:1px solid var(--border);font-size:17px;line-height:24px;font-weight:650}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:28px 20px}
+@media (max-width:600px){.gal{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 12px}}
+.gal figure{margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+.gal button{position:relative;display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;border-radius:10px}
+.gal img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;object-position:center 30%;border-radius:10px;background:var(--soft)}
+.gal figcaption{font-size:15px;line-height:22px}
+@media (max-width:600px){.gal figcaption{font-size:13.5px;line-height:18px}}
+.gal .hl img{outline:2px solid var(--primary);outline-offset:3px}
+.play{position:absolute;left:10px;bottom:10px;display:flex;align-items:center;gap:6px;min-height:32px;padding:0 12px 0 10px;border-radius:999px;background:#ffffff;color:var(--text);font-size:12px;font-weight:500}
+.pn{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;margin-top:48px;padding-top:20px;border-top:1px solid var(--hairline);font-size:15px;line-height:22px;font-weight:500}
+.pn a{display:inline-flex;align-items:center;min-height:44px}
+
+/* Footer: home and the same profile links as the home page */
+.site{margin-top:72px;padding:24px var(--gr) 40px var(--gl);border-top:1px solid var(--hairline);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:12px 24px;font-size:13.5px;line-height:18px;font-weight:500}
+.site .links{display:flex;flex-wrap:wrap;gap:6px 18px}
+
+/* Lightbox */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(21,32,43,.96);color:#ffffff;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:12px;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.lb img,.lb video{max-width:100%;max-height:100%;margin:auto;display:block;min-height:0;object-fit:contain}
+.lb video{background:#000}
+.lb-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;max-width:1200px;width:100%;margin-inline:auto}
+.lb-cap{margin:0;font-size:15px;line-height:22px;min-width:0;flex:1 1 20rem}
+.lb-cap .n{color:#c9d2da}
+.lb-btns{display:flex;gap:8px}
+.lb button{font:inherit;font-size:13.5px;font-weight:500;min-height:44px;padding:0 16px;border:0;border-radius:10px;background:#ffffff;color:var(--text);cursor:pointer}
+.lb button:hover{background:var(--primary-tint)}

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Expeditions · Armen Enikolopov</title>
+<meta name="description" content="Collecting trips in Colombia, Peru, Costa Rica, Panama, Armenia and on the California–Mexico border since 2023, with route maps and photographs.">
+<link rel="canonical" href="https://armenenikolopov.com/expeditions.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M14 30 C6 22 8 10 20 2 C24 10 24 20 16 30 Z' fill='%23165f99'/%3E%3Cpath d='M16 26 C14 20 15 14 17 9' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <a class="name" href="./">Armen Enikolopov, PhD</a>
+  <a class="mail" href="mailto:aenikolopov@gmail.com">aenikolopov@gmail.com</a>
+</header>
+
+<main>
+<!-- Overview: shown when the address has no trip in it -->
+<div id="overview" class="split">
+  <div class="split-text">
+    <div class="opening">
+      <h1>Expeditions</h1>
+      <nav aria-label="Trips by place">
+        <p class="menu">Collecting trips since 2023, newest first. Most were in Colombia, in <a href="#colombia-2026-05">the Chocó</a> and over <a href="#colombia-2025-08">the Western Cordillera</a>. Others went to <a href="#peru-2024">Peru</a>, <a href="#costa-rica-2024">Costa Rica</a>, <a href="#panama-2023">Panama</a>, <a href="#armenia-2024">Armenia</a> and <a href="#us-mexico-2023">the California–Mexico border</a>.</p>
+      </nav>
+    </div>
+    <ol class="trips" id="atlas-index" aria-label="Trips, newest first"></ol>
+  </div>
+  <figure class="side-map">
+    <div class="atlas-map" id="atlas-map"></div>
+    <figcaption class="cap">Each star is a trip; point at one to find it in the list. Solid lines follow the roads, dashed arcs are flights, dotted lines are boats. Roads: OpenStreetMap contributors. Outlines: Natural Earth.</figcaption>
+  </figure>
+</div>
+
+<!-- One trip: shown when the address ends in #trip-id -->
+<article id="trip" class="trip-view" hidden>
+  <div class="split split-rev">
+    <div class="split-text">
+      <div class="opening">
+        <p class="crumb"><a href="#">Expeditions</a> · <span id="t-meta"></span></p>
+        <h1 id="t-title"></h1>
+        <p class="story" id="t-text"></p>
+      </div>
+    </div>
+    <figure class="side-route">
+      <div id="t-route"></div>
+      <figcaption class="cap" id="t-cap"></figcaption>
+    </figure>
+  </div>
+  <section class="photos" aria-labelledby="t-ph">
+    <h2 id="t-ph">Photos</h2>
+    <div class="gal" id="t-gal"></div>
+    <nav class="pn" aria-label="Other trips">
+      <a id="t-older" href="#"></a>
+      <a id="t-newer" href="#"></a>
+    </nav>
+  </section>
+</article>
+</main>
+
+<footer class="site">
+  <a href="./">Home</a>
+  <span class="links"><a href="https://scholar.google.com/citations?user=pbje7P8AAAAJ">Google Scholar</a><a href="https://orcid.org/0009-0006-7063-2400">ORCID</a><a href="https://www.inaturalist.org/people/armen_e">iNaturalist</a><a href="https://github.com/armenenikolopov">GitHub</a><a href="https://www.linkedin.com/in/armen-enikolopov">LinkedIn</a><a href="https://www.imdb.com/name/nm3128670/">IMDb</a><a href="https://www.instagram.com/permanentfieldtrip/">Instagram</a></span>
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo" hidden>
+  <img alt="">
+  <video controls playsinline preload="metadata" hidden></video>
+  <div class="lb-bar">
+    <p class="lb-cap"></p>
+    <div class="lb-btns">
+      <button type="button" class="lb-prev">Previous</button>
+      <button type="button" class="lb-next">Next</button>
+      <button type="button" class="lb-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="geo.js"></script>
+<script src="trips.js"></script>
+<script src="routes.js"></script>
+<script src="maps.js"></script>
+<script>
+(function(){
+  var T=window.TRIPS||[],FM=window.FM;
+  if(!FM) return;
+  var esc=FM.esc;
+  function $(id){return document.getElementById(id);}
+  function plain(s){return String(s||'').replace(/<[^>]+>/g,'');}
+  var idx={};T.forEach(function(t,i){idx[t.id]=i;});
+  var TITLE='Expeditions · Armen Enikolopov';
+
+  /* Overview: list rows with a photo and one line, wired to the star map */
+  FM.atlas($('atlas-map'),$('atlas-index'),{base:'',routes:true,item:function(t){
+    var c=t.photos[t.cover||0]||t.photos[0]||{};
+    return '<a href="#'+esc(t.id)+'"><img src="'+esc(c.src||'')+'" alt="" loading="lazy" width="128" height="96">'+
+      '<span class="tx"><span class="when">'+esc(t.when)+' · '+esc(t.country)+'</span><span class="ttl">'+esc(t.title)+'</span>'+
+      (t.summary?'<span class="sum">'+t.summary+'</span>':'')+'</span></a>';
+  }});
+
+  function legend(t){
+    var road=false,air=false,boat=false;
+    t.stops.forEach(function(s,i){if(!i)return;var l=s.leg||'line';if(l==='air')air=true;else if(l==='boat')boat=true;else if(l==='line')road=true;});
+    var parts=[];
+    if(road)parts.push('solid lines follow the roads');
+    if(air)parts.push('dashed arcs are flights');
+    if(boat)parts.push('dotted lines are boat trips');
+    var s=parts.length?parts.join(', '):'open circles are collecting sites, grey places are for orientation';
+    s=s.charAt(0).toUpperCase()+s.slice(1)+'.';
+    if(road)s+=' Roads: OpenStreetMap contributors.';
+    return s;
+  }
+
+  var ov=$('overview'),tv=$('trip'),cur=-1,last=null;
+  function show(){
+    var i=idx[decodeURIComponent(location.hash.slice(1))];
+    if(i==null){
+      var was=cur;cur=-1;
+      tv.hidden=true;ov.hidden=false;document.title=TITLE;
+      if(last!=null){var li=$('atlas-index').querySelector('li[data-i="'+last+'"]');if(li)li.scrollIntoView({block:'center'});last=null;}
+      else if(was!==-1)window.scrollTo(0,0);
+      return;
+    }
+    if(i===cur)return;
+    cur=i;last=i;
+    var t=T[i];
+    ov.hidden=true;tv.hidden=false;
+    document.title=t.title+' · '+TITLE;
+    $('t-meta').textContent=t.when+' · '+t.country;
+    $('t-title').textContent=t.title;
+    var tx=$('t-text');tx.innerHTML=t.text;
+    [].forEach.call(tx.querySelectorAll('a[data-p]'),function(a){
+      if(!t.photos[+a.getAttribute('data-p')]){a.removeAttribute('data-p');return;}
+      a.href='#'+t.id;a.setAttribute('role','button');a.title='Opens the photo';
+    });
+    var r=$('t-route');r.innerHTML='';var box=document.createElement('div');box.className='route';r.appendChild(box);FM.route(box,t);
+    $('t-cap').textContent=legend(t);
+    $('t-gal').innerHTML=t.photos.map(function(p,pi){
+      var label=(p.video?'Play video':'Enlarge photo')+(p.caption?': '+esc(plain(p.caption)):'');
+      return '<figure><button type="button" data-p="'+pi+'" aria-label="'+label+'"><img src="'+esc(p.src)+'" alt="" loading="lazy">'+
+        (p.video?'<span class="play" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 16 16"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>Video</span>':'')+
+        '</button>'+(p.caption?'<figcaption>'+p.caption+'</figcaption>':'')+'</figure>';
+    }).join('');
+    var older=T[i+1],newer=T[i-1],o=$('t-older'),n=$('t-newer');
+    o.hidden=!older;n.hidden=!newer;
+    if(older){o.href='#'+older.id;o.textContent='← Earlier: '+older.title+', '+older.when;}
+    if(newer){n.href='#'+newer.id;n.textContent='Later: '+newer.title+', '+newer.when+' →';}
+    window.scrollTo(0,0);
+  }
+
+  /* Lightbox */
+  var lb=$('lb'),img=lb.querySelector('img'),vid=lb.querySelector('video'),cap=lb.querySelector('.lb-cap'),at={t:0,p:0},opener=null;
+  function stopVideo(){try{vid.pause();}catch(e){}vid.removeAttribute('src');vid.load();}
+  function paint(){
+    var list=T[at.t].photos,p=list[at.p];
+    if(p.video){img.hidden=true;vid.hidden=false;vid.poster=p.src;vid.src=p.video;}
+    else{stopVideo();vid.hidden=true;img.hidden=false;img.src=p.src;img.alt=plain(p.caption);}
+    cap.innerHTML=(p.caption||'')+' <span class="n">'+(at.p+1)+' of '+list.length+'</span>';
+    var many=list.length>1;lb.querySelector('.lb-prev').hidden=!many;lb.querySelector('.lb-next').hidden=!many;
+  }
+  function open(t,p,from){at={t:t,p:p};opener=from;paint();lb.hidden=false;document.documentElement.style.overflow='hidden';lb.querySelector('.lb-close').focus();}
+  function close(){stopVideo();lb.hidden=true;document.documentElement.style.overflow='';if(opener)opener.focus();}
+  function step(d){var k=T[at.t].photos.length;at.p=(at.p+d+k)%k;paint();}
+  $('t-gal').addEventListener('click',function(e){var b=e.target.closest('button[data-p]');if(b)open(cur,+b.getAttribute('data-p'),b);});
+  $('t-text').addEventListener('click',function(e){var a=e.target.closest('a[data-p]');if(!a)return;e.preventDefault();open(cur,+a.getAttribute('data-p'),a);});
+  lb.querySelector('.lb-close').addEventListener('click',close);
+  lb.querySelector('.lb-prev').addEventListener('click',function(){step(-1);});
+  lb.querySelector('.lb-next').addEventListener('click',function(){step(1);});
+  lb.addEventListener('click',function(e){if(e.target===lb)close();});
+  document.addEventListener('keydown',function(e){
+    if(lb.hidden)return;
+    if(e.key==='Escape')close();else if(e.key==='ArrowLeft')step(-1);else if(e.key==='ArrowRight')step(1);
+  });
+
+  window.addEventListener('hashchange',function(){if(!lb.hidden)close();show();});
+  show();
+})();
+</script>
+</body>
+</html>
